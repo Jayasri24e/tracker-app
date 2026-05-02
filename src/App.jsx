@@ -301,6 +301,7 @@ const [streak, setStreak] = useState(() => {
         lastDate: null
       };
 });
+const [showDashboard, setShowDashboard] = useState(false);
 useEffect(() => {
   localStorage.setItem(
     "trackerProgress",
@@ -411,6 +412,44 @@ const saveStreakToNetlify = async (date) => {
     })
   });
 };
+const continueLearning = () => {
+  for (let i = 0; i < courses.length; i++) {
+    for (let j = 0; j < courses[i].lessons.length; j++) {
+      if (!progress[i][j]) {
+        setOpenCourse(i);
+        setShowDashboard(true);
+
+        setTimeout(() => {
+          document
+            .getElementById(`lesson-${i}-${j}`)
+            ?.scrollIntoView({
+              behavior: "smooth",
+              block: "center"
+            });
+        }, 300);
+
+        return;
+      }
+    }
+  }
+
+  setShowDashboard(true);
+};
+if (!showDashboard) {
+  return (
+    <div className="container">
+      <div className="card">
+        <h1>🔥 Welcome Back</h1>
+        <h2>Current Streak: {streak.current} days</h2>
+        <h2>Overall Progress: {overallProgress}%</h2>
+
+        <button onClick={continueLearning}>
+          Continue Learning
+        </button>
+      </div>
+    </div>
+  );
+}
 
 return (
   <div className="container">
@@ -460,10 +499,15 @@ return (
             </div>
 
             {course.lessons.map((lesson, lessonIndex) => (
-              <div key={lessonIndex} className="lesson">
+              <div
+  key={lessonIndex}
+  id={`lesson-${courseIndex}-${lessonIndex}`}
+  className="lesson"
+>
   <input
     type="checkbox"
     checked={progress[courseIndex][lessonIndex]}
+  
     onChange={() =>
       toggleLesson(courseIndex, lessonIndex)
     }
