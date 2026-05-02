@@ -1,8 +1,12 @@
 const emailjs = require("@emailjs/nodejs");
+const { getStore } = require("@netlify/blobs");
 
 exports.handler = async () => {
   try {
-    const lastDate = process.env.LAST_STUDY_DATE;
+    const store = getStore("learning-data");
+
+    const lastDate = await store.get("lastStudyDate");
+
     const today = new Date().toDateString();
 
     if (lastDate !== today) {

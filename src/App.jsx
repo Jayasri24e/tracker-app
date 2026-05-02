@@ -351,6 +351,7 @@ const toggleLesson = (courseIndex, lessonIndex) => {
       longest: Math.max(streak.longest, newCurrent),
       lastDate: today
     });
+    saveStreakToNetlify(today);
   }
 };
 
@@ -398,6 +399,17 @@ const sendReminderEmail = () => {
     },
     "ccjTnOZdADUoXXC65"
   );
+};
+const saveStreakToNetlify = async (date) => {
+  await fetch("/.netlify/functions/save-streak", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      lastDate: date
+    })
+  });
 };
 
 return (
